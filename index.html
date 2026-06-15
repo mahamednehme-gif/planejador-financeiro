@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planejador Financeiro Pessoal Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;color:#1a202c}
+.header{background:linear-gradient(135deg,#1A365D,#276749);color:white;padding:20px;text-align:center}
+.header h1{font-size:20px;font-weight:700}
+.header p{font-size:12px;opacity:.85;margin-top:4px}
+.tabs{display:flex;background:#276749;overflow-x:auto}
+.tab{padding:12px 16px;color:rgba(255,255,255,.7);cursor:pointer;font-size:13px;white-space:nowrap;border-bottom:3px solid transparent}
+.tab.active{color:white;border-bottom:3px solid #FFD700;font-weight:600}
+.container{max-width:600px;margin:0 auto;padding:16px}
+.card{background:white;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.card h2{font-size:15px;font-weight:700;color:#276749;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.field label{font-size:12px;font-weight:600;color:#4a5568;text-transform:uppercase}
+.field input,.field select{padding:12px;border:2px solid #e2e8f0;border-radius:8px;font-size:15px;width:100%}
+.field input:focus{outline:none;border-color:#276749}
+.btn{background:linear-gradient(135deg,#1A365D,#276749);color:white;border:none;padding:14px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:8px}
+.result{background:linear-gradient(135deg,#1A365D,#276749);color:white;border-radius:12px;padding:20px;margin-top:12px;display:none}
+.result h3{font-size:13px;opacity:.8;margin-bottom:6px}
+.result .valor{font-size:32px;font-weight:700}
+.linha{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.2)}
+.linha:last-child{border:none;font-weight:700;font-size:14px}
+.tip{background:#f0fff4;border-left:4px solid #276749;padding:10px 14px;border-radius:0 8px 8px 0;font-size:12px;color:#276749;margin-top:10px}
+.section-tab{display:none}
+.section-tab.active{display:block}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>💰 Planejador Financeiro Pessoal Pro</h1>
+<p>Controle · Metas · Dívidas · Sonhos</p>
+</div>
+<div class="tabs">
+<div class="tab active" onclick="showTab('renda',this)">💵 Renda</div>
+<div class="tab" onclick="showTab('gastos',this)">📊 Gastos</div>
+<div class="tab" onclick="showTab('dividas',this)">💳 Dívidas</div>
+<div class="tab" onclick="showTab('sonhos',this)">🌟 Sonhos</div>
+</div>
+
+<div id="renda" class="section-tab active">
+<div class="container"><div class="card">
+<h2>💵 Minha Renda e Sobra do Mês</h2>
+<div class="field"><label>Salário / Renda Principal (R$)</label><input type="number" id="r1" placeholder="Ex: 3500"></div>
+<div class="field"><label>Renda Extra (R$)</label><input type="number" id="r2" placeholder="Ex: 500" value="0"></div>
+<div class="field"><label>Aluguel / Moradia (R$)</label><input type="number" id="r3" placeholder="Ex: 800"></div>
+<div class="field"><label>Alimentação (R$)</label><input type="number" id="r4" placeholder="Ex: 600"></div>
+<div class="field"><label>Transporte (R$)</label><input type="number" id="r5" placeholder="Ex: 300"></div>
+<div class="field"><label>Saúde e Remédios (R$)</label><input type="number" id="r6" placeholder="Ex: 150" value="0"></div>
+<div class="field"><label>Lazer e Assinaturas (R$)</label><input type="number" id="r7" placeholder="Ex: 200" value="0"></div>
+<div class="field"><label>Outros Gastos Fixos (R$)</label><input type="number" id="r8" placeholder="Ex: 100" value="0"></div>
+<button class="btn" onclick="calcRenda()">CALCULAR SOBRA DO MÊS</button>
+<div class="result" id="res_r">
+<h3>SOBRA MENSAL</h3>
+<div class="valor" id="res_r0"></div>
+<div id="res_r1"></div>
+</div>
+<div class="tip">💡 Regra 50-30-20: 50% necessidades, 30% desejos, 20% poupança.</div>
+</div></div></div>
+
+<div id="gastos" class="section-tab">
+<div class="container"><div class="card">
+<h2>📊 Analisador de Gastos</h2>
+<div class="field"><label>Renda Total (R$)</label><input type="number" id="g0" placeholder="Ex: 4000"></div>
+<div class="field"><label>Moradia (R$)</label><input type="number" id="g1" placeholder="Ex: 1000" value="0"></div>
+<div class="field"><label>Alimentação (R$)</label><input type="number" id="g2" placeholder="Ex: 600" value="0"></div>
+<div class="field"><label>Transporte (R$)</label><input type="number" id="g3" placeholder="Ex: 400" value="0"></div>
+<div class="field"><label>Saúde (R$)</label><input type="number" id="g4" placeholder="Ex: 200" value="0"></div>
+<div class="field"><label>Educação (R$)</label><input type="number" id="g5" placeholder="Ex: 300" value="0"></div>
+<div class="field"><label>Lazer (R$)</label><input type="number" id="g6" placeholder="Ex: 250" value="0"></div>
+<div class="field"><label>Roupas e Beleza (R$)</label><input type="number" id="g7" placeholder="Ex: 150" value="0"></div>
+<div class="field"><label>Dívidas e Parcelas (R$)</label><input type="number" id="g8" placeholder="Ex: 400" value="0"></div>
+<button class="btn" onclick="calcGastos()">ANALISAR GASTOS</button>
+<div class="result" id="res_g">
+<h3>DIAGNÓSTICO FINANCEIRO</h3>
+<div class="valor" id="res_g0"></div>
+<div id="res_g1"></div>
+</div>
+<div class="tip">💡 Gastos acima de 30% da renda em uma categoria merecem atenção.</div>
+</div></div></div>
+
+<div id="dividas" class="section-tab">
+<div class="container"><div class="card">
+<h2>💳 Simulador de Quitação de Dívidas</h2>
+<div class="field"><label>Valor Total da Dívida (R$)</label><input type="number" id="d1" placeholder="Ex: 5000"></div>
+<div class="field"><label>Taxa de Juros Mensal (%)</label><input type="number" id="d2" placeholder="Ex: 3.5" step="0.1"></div>
+<div class="field"><label>Quanto posso pagar por mês (R$)</label><input type="number" id="d3" placeholder="Ex: 300"></div>
+<div class="field"><label>Tenho para quitar agora (R$)</label><input type="number" id="d4" placeholder="Ex: 0" value="0"></div>
+<button class="btn" onclick="calcDividas()">SIMULAR QUITAÇÃO</button>
+<div class="result" id="res_d">
+<h3>PREVISÃO DE QUITAÇÃO</h3>
+<div class="valor" id="res_d0"></div>
+<div id="res_d1"></div>
+</div>
+<div class="tip">💡 Cartão de crédito rotativo chega a 400% ao ano. Priorize quitar primeiro.</div>
+</div></div></div>
+
+<div id="sonhos" class="section-tab">
+<div class="container"><div class="card">
+<h2>🌟 Simulador de Sonhos</h2>
+<div class="field"><label>Qual é o seu sonho?</label>
+<select id="s0">
+<option value="viagem">✈️ Viagem</option>
+<option value="carro">🚗 Carro</option>
+<option value="casa">🏠 Entrada da Casa</option>
+<option value="reserva">🛡️ Reserva de Emergência</option>
+<option value="outro">🎯 Outro Objetivo</option>
+</select></div>
+<div class="field"><label>Valor necessário (R$)</label><input type="number" id="s1" placeholder="Ex: 15000"></div>
+<div class="field"><label>Já tenho guardado (R$)</label><input type="number" id="s2" placeholder="Ex: 0" value="0"></div>
+<div class="field"><label>Consigo guardar por mês (R$)</label><input type="number" id="s3" placeholder="Ex: 500"></div>
+<div class="field"><label>Rendimento mensal (%)</label><input type="number" id="s4" placeholder="Ex: 0.5" value="0.5" step="0.1"></div>
+<button class="btn" onclick="calcSonhos()">QUANDO VOU REALIZAR?</button>
+<div class="result" id="res_s">
+<h3>SEU SONHO</h3>
+<div class="valor" id="res_s0"></div>
+<div id="res_s1"></div>
+</div>
+<div class="tip">💡 Guardar R$100 a mais por mês pode antecipar seu sonho em meses.</div>
+</div></div></div>
+<script>
+function fmt(v){return'R$ '+v.toFixed(2).replace('.',',')}
+function showTab(id,el){
+document.querySelectorAll('.section-tab').forEach(s=>s.classList.remove('active'));
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+el.classList.add('active')}
+
+function calcRenda(){
+var r1=parseFloat(document.getElementById('r1').value)||0;
+var r2=parseFloat(document.getElementById('r2').value)||0;
+var r3=parseFloat(document.getElementById('r3').value)||0;
+var r4=parseFloat(document.getElementById('r4').value)||0;
+var r5=parseFloat(document.getElementById('r5').value)||0;
+var r6=parseFloat(document.getElementById('r6').value)||0;
+var r7=parseFloat(document.getElementById('r7').value)||0;
+var r8=parseFloat(document.getElementById('r8').value)||0;
+var renda=r1+r2;
+var gastos=r3+r4+r5+r6+r7+r8;
+var sobra=renda-gastos;
+var pct=renda>0?(gastos/renda*100).toFixed(1):0;
+document.getElementById('res_r').style.display='block';
+document.getElementById('res_r0').textContent=fmt(sobra);
+document.getElementById('res_r1').innerHTML=
+'<div class="linha"><span>Renda total</span><span>'+fmt(renda)+'</span></div>'+
+'<div class="linha"><span>Total de gastos</span><span>'+fmt(gastos)+'</span></div>'+
+'<div class="linha"><span>% da renda gasta</span><span>'+pct+'%</span></div>'+
+'<div class="linha"><span>Ideal poupar (20%)</span><span>'+fmt(renda*0.2)+'</span></div>'+
+'<div class="linha"><span>SALDO DO MÊS</span><span>'+fmt(sobra)+'</span></div>';}
+
+function calcGastos(){
+var g0=parseFloat(document.getElementById('g0').value)||1;
+var cats=[['Moradia','g1'],['Alimentação','g2'],['Transporte','g3'],
+['Saúde','g4'],['Educação','g5'],['Lazer','g6'],
+['Roupas/Beleza','g7'],['Dívidas','g8']];
+var total=0;
+cats.forEach(c=>{total+=parseFloat(document.getElementById(c[1]).value)||0;});
+var sobra=g0-total;
+var html='';
+cats.forEach(c=>{
+var v=parseFloat(document.getElementById(c[1]).value)||0;
+if(v>0){var pct=(v/g0*100).toFixed(1);
+html+='<div class="linha"><span>'+c[0]+'</span><span>'+fmt(v)+' ('+pct+'%)</span></div>';}});
+html+='<div class="linha"><span>SOBRA</span><span>'+fmt(sobra)+'</span></div>';
+document.getElementById('res_g').style.display='block';
+document.getElementById('res_g0').textContent=fmt(sobra);
+document.getElementById('res_g1').innerHTML=html;}
+
+function calcDividas(){
+var d=parseFloat(document.getElementById('d1').value)||0;
+var taxa=parseFloat(document.getElementById('d2').value)||0;
+var pgto=parseFloat(document.getElementById('d3').value)||0;
+var tem=parseFloat(document.getElementById('d4').value)||0;
+var saldo=d-tem;
+if(saldo<=0){
+document.getElementById('res_d').style.display='block';
+document.getElementById('res_d0').textContent='🎉 Já quitada!';
+document.getElementById('res_d1').innerHTML='<div class="linha"><span>Você já tem valor suficiente!</span></div>';
+return;}
+var i=taxa/100;
+if(pgto<=saldo*i){
+document.getElementById('res_d').style.display='block';
+document.getElementById('res_d0').textContent='⚠️ Parcela baixa';
+document.getElementById('res_d1').innerHTML='<div class="linha"><span>Sua parcela não cobre os juros. Aumente o valor.</span></div>';
+return;}
+var meses=0;var totalPago=tem;var saldoAtual=saldo;
+while(saldoAtual>0&&meses<600){
+saldoAtual=saldoAtual*(1+i)-pgto;
+totalPago+=pgto;meses++;}
+var anos=Math.floor(meses/12);var mr=meses%12;
+var juros=totalPago-d;
+var tempo=anos>0?anos+'a '+mr+'m':meses+' meses';
+document.getElementById('res_d').style.display='block';
+document.getElementById('res_d0').textContent=tempo;
+document.getElementById('res_d1').innerHTML=
+'<div class="linha"><span>Saldo a quitar</span><span>'+fmt(saldo)+'</span></div>'+
+'<div class="linha"><span>Total de juros</span><span>'+fmt(juros)+'</span></div>'+
+'<div class="linha"><span>Total pago</span><span>'+fmt(totalPago)+'</span></div>'+
+'<div class="linha"><span>QUITAÇÃO EM</span><span>'+tempo+'</span></div>';}
+
+function calcSonhos(){
+var meta=parseFloat(document.getElementById('s1').value)||0;
+var tem=parseFloat(document.getElementById('s2').value)||0;
+var pgto=parseFloat(document.getElementById('s3').value)||0;
+var taxa=parseFloat(document.getElementById('s4').value)||0.5;
+var sonho=document.getElementById('s0').value;
+var falta=meta-tem;
+if(falta<=0){
+document.getElementById('res_s').style.display='block';
+document.getElementById('res_s0').textContent='🎉 JÁ TEM!';
+document.getElementById('res_s1').innerHTML='<div class="linha"><span>Você já tem o valor necessário!</span></div>';
+return;}
+var i=taxa/100;var meses=0;var saldo=tem;
+while(saldo<meta&&meses<600){saldo=saldo*(1+i)+pgto;meses++;}
+var anos=Math.floor(meses/12);var mr=meses%12;
+var totalInvestido=tem+(pgto*meses);
+var rendimento=saldo-totalInvestido;
+var tempo=anos>0?anos+' ano(s) e '+mr+' mês(es)':meses+' meses';
+var emojis={viagem:'✈️',carro:'🚗',casa:'🏠',reserva:'🛡️',outro:'🎯'};
+document.getElementById('res_s').style.display='block';
+document.getElementById('res_s0').textContent=emojis[sonho]+' '+tempo;
+document.getElementById('res_s1').innerHTML=
+'<div class="linha"><span>Meta</span><span>'+fmt(meta)+'</span></div>'+
+'<div class="linha"><span>Já tenho</span><span>'+fmt(tem)+'</span></div>'+
+'<div class="linha"><span>Falta</span><span>'+fmt(falta)+'</span></div>'+
+'<div class="linha"><span>Rendimento estimado</span><span>'+fmt(rendimento)+'</span></div>'+
+'<div class="linha"><span>REALIZAREI EM</span><span>'+tempo+'</span></div>';}
+</script>
+</body>
+</html>
